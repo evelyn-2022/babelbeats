@@ -1,0 +1,6 @@
+[submodule "babelbeats-web"]
+	path = babelbeats-web
+	url = https://github.com/evelyn-2022/babelbeats-web.git
+[submodule "babelbeats-server"]
+	path = babelbeats-server
+	url = https://github.com/evelyn-2022/babelbeats-server.git
