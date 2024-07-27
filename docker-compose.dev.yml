@@ -1,0 +1,49 @@
+services:
+  app:
+    build:
+      context: ./babelbeats-server
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8080:8080'
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI}
+      SERVER_PORT: ${SERVER_PORT}
+      KEY_STORE_PASSWORD: ${KEY_STORE_PASSWORD}
+    depends_on:
+      - db
+    volumes:
+      - ./babelbeats-server/src:/app/src
+      - ./babelbeats-server/target:/app/target
+      - ~/.m2:/root/.m2
+
+  frontend:
+    build:
+      context: ./babelbeats-web
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./babelbeats-web:/app
+      - /app/node_modules
+    depends_on:
+      - app
+
+  db:
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: babelbeats_db
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres_data:
