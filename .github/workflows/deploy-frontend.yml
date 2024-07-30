@@ -3,10 +3,10 @@ name: Deploy Frontend
 on:
   push:
     paths:
-      - 'babelbeats-web/**' # Monitor all files in the babelbeats-web directory (submodule)
+      - 'babelbeats-web/**'
     branches:
-      - main # Specify the branch that triggers the deployment
-    workflow_dispatch: # Allow manual triggering of the workflow
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -14,29 +14,32 @@ jobs:
 
     steps:
       - name: Checkout frontend code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: true
-          path: babelbeats-web
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install dependencies
-        run: |
-          cd babelbeats-web
-          yarn install
+        run: yarn install
+        working-directory: babelbeats-web
 
       - name: Build application
         run: |
-          cd babelbeats-web
+          echo "VITE_COGNITO_USER_POOL_ID=${{ secrets.VITE_COGNITO_USER_POOL_ID }}" >> .env
+          echo "VITE_COGNITO_USER_POOL_CLIENT_ID=${{ secrets.VITE_COGNITO_USER_POOL_CLIENT_ID }}" >> .env
+          echo "VITE_COGNITO_DOMAIN=${{ secrets.VITE_COGNITO_DOMAIN }}" >> .env
+          echo "VITE_REDIRECT_SIGNIN=${{ secrets.VITE_REDIRECT_SIGNIN }}" >> .env
+          echo "VITE_REDIRECT_SIGNOUT=${{ secrets.VITE_REDIRECT_SIGNOUT }}" >> .env
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env.aws
           yarn build:aws
+        working-directory: babelbeats-web
 
       - name: Deploy to S3
-        run: |
-          aws s3 sync babelbeats-web/dist s3://babelbeats-frontend-test --delete
+        run: aws s3 sync babelbeats-web/dist s3://babelbeats-frontend-test --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
