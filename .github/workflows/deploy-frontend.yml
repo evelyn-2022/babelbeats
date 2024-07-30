@@ -29,11 +29,13 @@ jobs:
 
       - name: Build application
         run: |
-          echo "VITE_COGNITO_USER_POOL_ID=${{ secrets.VITE_COGNITO_USER_POOL_ID }}" >> .env
-          echo "VITE_COGNITO_USER_POOL_CLIENT_ID=${{ secrets.VITE_COGNITO_USER_POOL_CLIENT_ID }}" >> .env
-          echo "VITE_COGNITO_DOMAIN=${{ secrets.VITE_COGNITO_DOMAIN }}" >> .env
-          echo "VITE_REDIRECT_SIGNIN=${{ secrets.VITE_REDIRECT_SIGNIN }}" >> .env
-          echo "VITE_REDIRECT_SIGNOUT=${{ secrets.VITE_REDIRECT_SIGNOUT }}" >> .env
+          echo "VITE_COGNITO_ADMIN_ACCESS_KEY_ID=${{ secrets.VITE_COGNITO_ADMIN_ACCESS_KEY_ID }}" >> .env.aws
+          echo "VITE_COGNITO_ADMIN_SECRET_ACCESS_KEY=${{ secrets.VITE_COGNITO_ADMIN_SECRET_ACCESS_KEY }}" >> .env.aws
+          echo "VITE_COGNITO_USER_POOL_ID=${{ secrets.VITE_COGNITO_USER_POOL_ID }}" >> .env.aws
+          echo "VITE_COGNITO_USER_POOL_CLIENT_ID=${{ secrets.VITE_COGNITO_USER_POOL_CLIENT_ID }}" >> .env.aws
+          echo "VITE_COGNITO_DOMAIN=${{ secrets.VITE_COGNITO_DOMAIN }}" >> .env.aws
+          echo "VITE_REDIRECT_SIGNIN=${{ secrets.VITE_REDIRECT_SIGNIN }}" >> .env.aws
+          echo "VITE_REDIRECT_SIGNOUT=${{ secrets.VITE_REDIRECT_SIGNOUT }}" >> .env.aws
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env.aws
           yarn build:aws
         working-directory: babelbeats-web
