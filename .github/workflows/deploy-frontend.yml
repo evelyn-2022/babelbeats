@@ -1,0 +1,42 @@
+name: Deploy Frontend
+
+on:
+  push:
+    paths:
+      - 'babelbeats-web/**' # Monitor all files in the babelbeats-web directory (submodule)
+    branches:
+      - main # Specify the branch that triggers the deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout frontend code
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          path: babelbeats-web
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Specify the Node.js version to use
+
+      - name: Install dependencies
+        run: |
+          cd babelbeats-web
+          yarn install
+
+      - name: Build application
+        run: |
+          cd babelbeats-web
+          yarn build:aws
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync babelbeats-web/dist s3://babelbeats-frontend-test --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
