@@ -6,17 +6,17 @@
 
 ### Deployment Details
 
-- Frontend: Hosted on AWS S3 with distribution through CloudFront. This setup provides a Content Delivery Network (CDN) that improves performance by caching content at edge locations globally, reducing latency and ensuring fast load times for users.
+- **Frontend**: Hosted on AWS S3 and distributed via CloudFront, providing a global Content Delivery Network (CDN) that caches content at edge locations to reduce latency and ensure fast load times for users.
 
-- API: Deployed using AWS Elastic Container Service (ECS) with an Application Load Balancer. This configuration ensures high availability and efficient traffic management, automatically distributing incoming application traffic across multiple targets.
+- **API**: Deployed using AWS Elastic Container Service (ECS) with an Application Load Balancer, ensuring high availability and efficient traffic management by automatically distributing incoming traffic across multiple targets.
 
-- Database: The application uses Amazon RDS with a PostgreSQL database for robust and reliable data management.
+- **Database**: The application uses Amazon RDS with a PostgreSQL database for robust and reliable data management.
 
-- User Authentication: Managed using AWS Cognito, which provides secure and scalable user sign-up, sign-in, and access control. The application supports federated authentication, including Google login, allowing users to sign in using their existing social media or identity provider credentials.
+- **User Authentication**: Managed with AWS Cognito, offering secure and scalable user sign-up, sign-in, and access control. It supports both email and social media account authentication, providing a flexible and user-friendly experience.
 
-- SSL Certificate: Secured with an SSL certificate managed by AWS Certificate Manager (ACM) to ensure secure data transmission and encryption.
+- **SSL Certificate**: Secured with an SSL certificate managed by AWS Certificate Manager (ACM) to ensure secure data transmission and encryption.
 
-## Getting Started
+## Docker Setup
 
 ### Development Mode
 
@@ -36,28 +36,26 @@ To start the project in the development environment, follow these steps:
    Use Docker Compose to build and run the services.
 
    ```bash
-   docker-compose -f docker-compose.dev.yml up --build
+   docker-compose --env-file .env.dev -f docker-compose.dev.yml up --build
    ```
 
    This command will build the Docker images and start the containers.
 
 3. Accessing the Services
 
-   - Web Client: Accessible at https://localhost:3000
-   - Server: Accessible at https://localhost:8080
+   - Web Client: Accessible at http://localhost:3000
+   - Server: Accessible at http://localhost:8080
 
-4. Important Note on SSL Certificates
+### Testing Mode
 
-   For development purposes, we use self-signed SSL certificates. This means the browser may flag the connection as insecure. We recommend using the Firefox browser, as it allows you to easily add exceptions for self-signed certificates.
-
-### Production Mode
+The testing mode mimics deployment environment by building the frontend into a static package (`dist`) and packaging the Java server into a JAR file. Nginx acts as a reverse proxy, routing requests to the frontend service for static assets and the API service for backend logic.
 
 1. Start the Environment
 
    Use Docker Compose to build and run the services.
 
    ```bash
-   docker-compose up --build
+   docker-compose --env-file .env.test up --build
    ```
 
    This command will build the Docker images and start the containers.
