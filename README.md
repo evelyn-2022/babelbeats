@@ -4,6 +4,9 @@
 
 🎉 The web application BabelBeats is live and accessible at https://babelbeats.rocks/
 
+> [!CAUTION]
+> I've temporarily taken down the server and database because they're too expensive and I'm just a poor student 🥲. But I'll redeploy the app once version 1 is ready for release.
+
 ### Deployment Details
 
 - **Frontend**: Hosted on AWS S3 and distributed via CloudFront, providing a global Content Delivery Network (CDN) that caches content at edge locations to reduce latency and ensure fast load times for users.
